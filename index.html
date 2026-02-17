@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>宁南生活 · 重营销轻资产最终版</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:PingFang SC,Microsoft YaHei,sans-serif}
+body{background:#f5f7fa;color:#222;line-height:1.55}
+.top-bar{background:#e63946;color:#fff;padding:5px 0;text-align:center;font-size:13px}
+.header{background:linear-gradient(135deg,#e63946,#c01111);color:#fff;padding:28px 12px;text-align:center}
+.banner{background:#ff6b00;color:#fff;padding:10px 0;text-align:center;font-weight:bold}
+.nav{background:#b71c1c;display:flex;flex-wrap:wrap;justify-content:center;position:sticky;top:0;z-index:999}
+.nav a{color:#fff;padding:12px 14px;text-decoration:none;font-size:15px}
+.section{background:#fff;border-radius:12px;margin:12px;padding:18px;box-shadow:0 2px 10px rgba(0,0,0,0.05)}
+.section h2{color:#e63946;border-left:6px solid #e63946;padding-left:12px;margin-bottom:14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;margin-top:10px}
+.card{border:1px solid #eee;border-radius:12px;padding:16px;transition:0.25s}
+.card:hover{transform:translateY(-3px);box-shadow:0 6px 14px rgba(0,0,0,0.07)}
+.btn{background:#e63946;color:#fff;border:none;border-radius:8px;padding:10px 16px;cursor:pointer;margin:6px;font-weight:bold}
+.btn-orange{background:#ff6b00}
+.btn-green{background:#00b46a}
+.btn-blue{background:#1677ff}
+.btn-gold{background:#ffc107;color:#222}
+.btn-sm{padding:5px 9px;font-size:14px}
+input,select{width:100%;padding:10px;margin:6px 0;border:1px solid #ddd;border-radius:8px}
+.coupon{background:#fff5e6;border-left:6px solid #ff6b00;padding:12px;margin:8px 0;border-radius:8px}
+.label{display:inline-block;padding:3px 6px;border-radius:4px;font-size:12px;color:#fff}
+.label-orange{background:#ff6b00}
+.label-green{background:#00b46a}
+.label-blue{background:#1677ff}
+.commission{color:#e63946;font-weight:bold}
+.point{color:#1677ff;font-weight:bold}
+.log-box{background:#f9f9f9;padding:10px;border-radius:8px;font-size:13px;max-height:220px;overflow-y:auto}
+</style>
+</head>
+<body>
+
+<div class="top-bar">🏆 轻资产运营 · 全营销裂变平台</div>
+<div class="banner" id="topAd">🔥 分享赚钱 · 消费省钱 · 商家自营 · 平台只做营销</div>
+
+<div class="header">
+<h1>🧧 宁南生活营销平台</h1>
+<p>二级分销 · 优惠券 · 广告变现 · 零库存 · 全裂变</p>
+</div>
+
+<div class="nav">
+<a href="#market">营销中心</a>
+<a href="#shop">商家商城</a>
+<a href="#order">我的订单</a>
+<a href="#user">我的账户</a>
+<a href="#admin">管理后台</a>
+</div>
+
+<div class="container">
+
+<!-- 营销中心 -->
+<div class="section" id="market">
+<h2>📣 营销中心（赚钱·省钱）</h2>
+<button class="btn-orange" onclick="goShare()">👉 分享赚钱（二级分销）</button>
+<button class="btn-green" onclick="goCoupon()">🎟️ 领取优惠券</button>
+<button class="btn-gold" onclick="goVip()">👑 会员等级</button>
+<button class="btn-blue" onclick="goPoint()">💰 积分中心</button>
+<div id="marketPanel"></div>
+</div>
+
+<!-- 商家商城 -->
+<div class="section" id="shop">
+<h2>🏪 商家自营商城（零库存）</h2>
+<input placeholder="搜索商品" id="kw" oninput="searchGoods()">
+<div id="cateList"></div>
+<div>
+<label><input type="radio" name="deliver" value="all" checked onclick="loadShop()"> 全部</label>
+<label><input type="radio" name="deliver" value="自提" onclick="loadShop()"> 🚚 自提优先</label>
+</div>
+<button class="btn-red" onclick="toTopAd()">🔥 商品置顶（营销广告）</button>
+<div class="grid" id="shopList"></div>
+<button class="btn-green" onclick="addGoods()">商家发布商品</button>
+</div>
+
+<!-- 订单 -->
+<div class="section" id="order">
+<h2>🧾 我的订单</h2>
+<button class="btn" onclick="loadOrder()">刷新订单</button>
+<button class="btn-blue" onclick="toVerify()">✅ 到店核销</button>
+<button class="btn-orange" onclick="toRefund()">申请退款</button>
+<div id="orderList"></div>
+</div>
+
+<!-- 我的账户 -->
+<div class="section" id="user">
+<h2>👤 我的账户（分销+佣金）</h2>
+<div id="loginBox"></div>
+<div id="userInfo"></div>
+<button class="btn-gold" onclick="myCommission()">💰 我的佣金</button>
+<button class="btn-orange" onclick="toWithdraw()">提现</button>
+<button class="btn-green" onclick="myTeam()">👥 我的团队（二级）</button>
+<div id="userPanel"></div>
+</div>
+
+<!-- 管理后台 -->
+<div class="section" id="admin">
+<h2>⚙️ 平台管理（重营销·轻资产）</h2>
+<button class="btn-orange" onclick="checkAd()">广告审核</button>
+<button class="btn-blue" onclick="checkWithdraw()">提现审核</button>
+<button class="btn-green" onclick="checkRefund()">退款审核</button>
+<button class="btn" onclick="setCoupon()">设置优惠券（营销）</button>
+<div id="adminPanel"></div>
+</div>
+
+</div>
+
+<script>
+// 本地存储
+function get(k){return JSON.parse(localStorage.getItem(k)||"[]")}
+function set(k,v){localStorage.setItem(k,JSON.stringify(v))}
+
+// 平台配置
+const CONFIG = {
+  commission1: 0.10,
+  commission2: 0.05,
+  topPrice: 10,
+  bannerPrice: 30,
+  freezeCommission: true
+};
+
+// 全局数据
+let users = get("users") || [
+  {id:1,mobile:"admin",pwd:"admin",role:"admin",balance:0,commission:0,commissionLock:0,point:0,invite:"ADMIN",p1:[],p2:[]},
+  {id:2,mobile:"13800138000",pwd:"123456",role:"shop",balance:0,commission:0,commissionLock:0,point:0,invite:"SHOP01",p1:[],p2:[]}
+];
+let currentUser = get("currentUser");
+let goods = get("goods") || [];
+let orders = get("orders") || [];
+let ads = get("ads") || [];
+let withdraws = get("withdraws") || [];
+let refunds = get("refunds") || [];
+let coupons = get("coupons") || [
+  {name:"新人满30减3",val:3,limit:30,type:"新人"},
+  {name:"满50减5",val:5,limit:50,type:"通用"},
+  {name:"满100减15",val:15,limit:100,type:"通用"}
+];
+let commissionLog = get("commissionLog") || [];
+let cates = ["美食","生鲜","服饰","日用","服务"];
+
+// 登录
+function showLogin(){
+  if(currentUser){
+    loginBox.innerHTML = `
+      已登录：${currentUser.mobile}｜${currentUser.role}
+      <button onclick="logout()">退出</button>`;
+    userInfo.innerHTML = `
+      余额：${currentUser.balance.toFixed(2)}｜
+      佣金：<span class="commission">${currentUser.commission.toFixed(2)}</span>｜
+      冻结佣金：${currentUser.commissionLock.toFixed(2)}｜
+      积分：<span class="point">${currentUser.point}</span>`;
+  }else{
+    loginBox.innerHTML = `
+      <input placeholder="手机号" id="mobile" value="13800138000">
+      <input placeholder="密码" id="pwd" value="123456" type="password">
+      <button class="btn" onclick="login()">登录</button>
+      <button class="btn-green" onclick="register()">注册</button>`;
+  }
+}
+
+function login(){
+  let m = mobile.value, p = pwd.value;
+  currentUser = users.find(u=>u.mobile==m&&u.pwd==p);
+  if(!currentUser){alert("账号或密码错误");return;}
+  set("currentUser",currentUser);
+  showLogin();
+  loadAll();
+}
+function logout(){currentUser=null;set("currentUser",null);showLogin();}
+function register(){
+  let m=prompt("请输入手机号"),p=prompt("请输入密码");
+  if(!m||!p||users.find(x=>x.mobile==m)){alert("注册失败");return;}
+  let newUser = {
+    id:users.length+1,mobile:m,pwd:p,role:"shop",
+    balance:0,commission:0,commissionLock:0,point:0,
+    invite:"U"+(users.length+1),p1:[],p2:[]
+  };
+  users.push(newUser);
+  set("users",users);
+  alert("注册成功！已赠送新人券");
+}
+
+// 分销
+function goShare(){
+  if(!currentUser)return;
+  marketPanel.innerHTML = `
+  <div class="card">
+    <h3>分享赚钱</h3>
+    <p>你的邀请码：<b>${currentUser.invite}</b></p>
+    <p>一级佣金：10%｜二级佣金：5%</p>
+    <p>佣金冻结：核销后自动到账</p>
+    <button class="btn-orange" onclick="bindInvite()">绑定邀请码</button>
+    <button class="btn-blue" onclick="showCommissionLog()">佣金明细</button>
+  </div>`;
+}
+function bindInvite(){
+  let code=prompt("请输入邀请码");
+  let u=users.find(x=>x.invite==code);
+  if(!u){alert("邀请码无效");return;}
+  u.p1.push(currentUser.mobile);
+  set("users",users);
+  alert("绑定上级成功！");
+}
+function myTeam(){
+  if(!currentUser)return;
+  alert(`一级成员：${currentUser.p1.length}人\n二级成员：${currentUser.p2.length}人`);
+}
+function showCommissionLog(){
+  let html = commissionLog.filter(x=>x.to==currentUser.mobile).map(x=>`
+    <div>${x.time}｜${x.desc}｜+${x.money.toFixed(2)}元</div>
+  `).join("")||"暂无记录";
+  marketPanel.innerHTML = `<div class="log-box">${html}</div>`;
+}
+
+// 分佣 + 冻结
+function giveCommission(money,orderNo){
+  if(!currentUser) return;
+  let u1 = users.find(x=>x.p1.includes(currentUser.mobile));
+  if(u1){
+    let c1 = money * CONFIG.commission1;
+    if(CONFIG.freezeCommission){ u1.commissionLock += c1; }else{ u1.commission += c1; }
+    commissionLog.push({to:u1.mobile,orderNo,desc:"一级佣金",money:c1,time:new Date().toLocaleString()});
+    let u2 = users.find(x=>x.p1.includes(u1.mobile));
+    if(u2){
+      let c2 = money * CONFIG.commission2;
+      if(CONFIG.freezeCommission){ u2.commissionLock += c2; }else{ u2.commission += c2; }
+      commissionLog.push({to:u2.mobile,orderNo,desc:"二级佣金",money:c2,time:new Date().toLocaleString()});
+    }
+    set("users",users);
+    set("commissionLog",commissionLog);
+  }
+}
+
+// 核销解冻佣金
+function unlockCommission(orderNo){
+  let log = commissionLog.filter(x=>x.orderNo==orderNo);
+  log.forEach(l=>{
+    let u = users.find(x=>x.mobile==l.to);
+    if(u){ u.commissionLock -= l.money; u.commission += l.money; }
+  });
+  set("users",users);
+}
+
+// 优惠券
+function goCoupon(){
+  marketPanel.innerHTML = coupons.map(c=>`
+    <div class="coupon">
+      <strong>${c.name}</strong><br>
+      满${c.limit}减${c.val}｜${c.type}
+      <button class="btn-green btn-sm" onclick="useCoupon('${c.name}')">立即使用</button>
+    </div>
+  `).join("");
+}
+function useCoupon(name){alert(`已使用优惠券：${name}`);}
+
+// 积分
+function goPoint(){
+  marketPanel.innerHTML=`<div class="card">
+    当前积分：${currentUser?.point||0}<br>
+    规则：消费1元=1积分，可抵现/升级
+  </div>`;
+}
+function addPoint(money){
+  if(!currentUser)return;
+  currentUser.point += Math.floor(money);
+  set("users",users);
+  showLogin();
+}
+
+// 广告
+function toTopAd(){
+  if(!currentUser){alert("请登录");return;}
+  alert(`支付${CONFIG.topPrice}元，商品置顶展示，流量翻倍！`);
+}
+
+// 核销
+function toVerify(){
+  let no=prompt("输入订单号");
+  let o=orders.find(x=>x.orderNo==no&&x.status=="paid");
+  if(!o){alert("核销失败：订单不存在或未支付");return;}
+  o.status="used";
+  unlockCommission(no);
+  set("orders",orders);
+  alert("核销成功！佣金已自动解冻");
+  loadOrder();
+}
+
+// 退款
+function toRefund(){
+  let no=prompt("请输入要退款的订单号");
+  if(!no)return;
+  refunds.push({
+    orderNo:no,mobile:currentUser.mobile,status:"待审核",time:new Date().toLocaleString()
+  });
+  set("refunds",refunds);
+  alert("退款申请已提交，平台审核后由商家承担");
+}
+function checkRefund(){
+  if(currentUser?.role!="admin")return;
+  adminPanel.innerHTML=refunds.map(r=>`
+    <div class="card">
+      ${r.orderNo}｜${r.mobile}｜${r.status}
+      <button onclick="refundPass('${r.orderNo}')">同意退款</button>
+    </div>
+  `).join("")||"暂无退款";
+}
+function refundPass(no){
+  let o=orders.find(x=>x.orderNo==no);
+  if(o)o.status="refund";
+  let r=refunds.find(x=>x.orderNo==no);
+  if(r)r.status="已同意";
+  set("orders",orders);set("refunds",refunds);
+  checkRefund();
+}
+
+// 商城
+function searchGoods(){loadShop();}
+function loadShop(){
+  let kw=document.getElementById("kw")?.value||"";
+  let d=document.querySelector('input[name="deliver"]:checked')?.value||"all";
+  let list=goods.filter(g=>g.name.includes(kw)&&(d=="all"||g.deliver==d));
+  shopList.innerHTML=list.map(g=>`
+    <div class="card">
+      <h3>${g.name}</h3>
+      <p>￥${g.price}</p>
+      <p><span class="label label-green">商家自营</span> ${g.deliver}</p>
+      <button class="btn-orange" onclick="buy(${g.id})">立即购买</button>
+    </div>
+  `).join("")||"暂无商品";
+}
+function buy(id){
+  if(!currentUser){alert("请登录");return;}
+  let g=goods.find(x=>x.id==id);
+  let orderNo="O"+Date.now();
+  orders.unshift({
+    orderNo,goods:g.name,price:g.price,
+    mobile:currentUser.mobile,status:"paid",time:new Date().toLocaleString()
+  });
+  set("orders",orders);
+  giveCommission(g.price,orderNo);
+  addPoint(g.price);
+  alert("下单成功！请到店核销");
+  loadOrder();
+}
+
+// 订单
+function loadOrder(){
+  orderList.innerHTML=orders.filter(o=>o.mobile==currentUser?.mobile).map(o=>`
+    <div class="card">
+      ${o.orderNo}<br>
+      ${o.goods} ￥${o.price}
+      <span class="label ${o.status=='paid'?'label-orange':o.status=='used'?'label-green':o.status=='refund'?'label-red':''}">
+        ${o.status=='paid'?'已支付':o.status=='used'?'已核销':'已退款'}
+      </span>
+    </div>
+  `).join("")||"暂无订单";
+}
+
+// 会员
+function goVip(){
+  let total=orders.filter(o=>o.mobile==currentUser?.mobile&&o.status=="used")
+    .reduce((s,i)=>s+Number(i.price),0);
+  let lv=total>=2000?"钻石会员":total>=500?"金卡会员":total>=100?"银卡会员":"普通会员";
+  marketPanel.innerHTML=`<div class="card">
+    当前等级：${lv}<br>
+    累计消费：${total.toFixed(2)}元
+  </div>`;
+}
+
+// 佣金 & 提现
+function myCommission(){
+  if(!currentUser)return;
+  alert(`可提现佣金：${currentUser.commission.toFixed(2)}元`);
+}
+function toWithdraw(){alert("请联系平台客服进行提现");}
+function checkWithdraw(){if(currentUser?.role!="admin")return;adminPanel.innerHTML="功能已预留";}
+function checkAd(){if(currentUser?.role!="admin")return;adminPanel.innerHTML="功能已预留";}
+function setCoupon(){if(currentUser?.role!="admin")return;adminPanel.innerHTML="功能已预留";}
+
+// 发布商品
+function addGoods(){
+  if(!currentUser||currentUser.role!="shop"){alert("商家才可发布");return;}
+  let name=prompt("商品名"),price=prompt("价格");
+  if(!name||!price)return;
+  goods.push({id:goods.length+1,name,price,deliver:"自提",shop:currentUser.mobile,top:false});
+  set("goods",goods);loadShop();
+}
+
+// 启动
+function loadAll(){showLogin();loadShop();loadOrder();}
+loadAll();
+</script>
+</body>
+</html>
